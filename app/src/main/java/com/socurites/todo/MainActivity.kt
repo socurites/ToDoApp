@@ -92,7 +92,7 @@ fun TopLevel() {
             )
 
             LazyColumn() {
-                items(toDoList) {todoData ->
+                items(items = toDoList, key = { item ->  item.key }) {todoData ->
                     ToDo(
                         todoData = todoData,
                         onToggle = onToggle,
