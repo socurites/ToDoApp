@@ -3,6 +3,7 @@ package com.socurites.todo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -55,7 +56,9 @@ fun TopLevel() {
 
     Scaffold {
         Column(
-            modifier = Modifier.fillMaxSize().padding(it)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
         ) {
             ToDoInput(text = text, onTextChange = setText, onSubmit = {})
         }
@@ -83,6 +86,7 @@ fun ToDoInput(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToDo(
     todoData: ToDoData,
@@ -95,25 +99,47 @@ fun ToDo(
         modifier = Modifier.padding(4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = todoData.text,
-                modifier = Modifier.weight(1f),
-            )
-            Text(
-                text = "완료",
-            )
-            Checkbox(
-                checked = todoData.done,
-                onCheckedChange = { checked -> onToggle(todoData.key, checked)})
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "수정")
-            }
-            Spacer(modifier = Modifier.size(10.dp))
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "삭제")
+        Crossfade(targetState = isEditing, label = "") {
+            when(it) {
+                false -> {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = todoData.text,
+                            modifier = Modifier.weight(1f),
+                        )
+                        Text(
+                            text = "완료",
+                        )
+                        Checkbox(
+                            checked = todoData.done,
+                            onCheckedChange = { checked -> onToggle(todoData.key, checked)})
+                        Button(onClick = {
+                            isEditing = true
+                        }) {
+                            Text(text = "수정")
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Button(onClick = { /*TODO*/ }) {
+                            Text(text = "삭제")
+                        }
+                    }
+                }
+                true -> {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedTextField(
+                            value = todoData.text,
+                            onValueChange = {},
+                            modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.size(4.dp))
+                        Button(onClick = {}) {
+                            Text(text = "완료")
+                        }
+                    }
+                }
             }
         }
     }
