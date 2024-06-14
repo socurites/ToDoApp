@@ -65,9 +65,13 @@ fun TopLevel() {
     }
 
     val onToggle: (Int, Boolean) -> Unit = { key, checked ->
-        Log.i("Main", "$checked")
         val indexOfFirst = toDoList.indexOfFirst { it.key == key }
         toDoList[indexOfFirst] = toDoList[indexOfFirst].copy(done = checked)
+    }
+
+    val onDelete: (Int) -> Unit = {key ->
+        val indexOfFirst = toDoList.indexOfFirst { it.key == key }
+        toDoList.removeAt(indexOfFirst)
     }
 
     Scaffold {
@@ -87,6 +91,7 @@ fun TopLevel() {
                     ToDo(
                         todoData = todoData,
                         onToggle = onToggle,
+                        onDelete = onDelete,
                     )
                 }
             }
@@ -153,7 +158,9 @@ fun ToDo(
                             Text(text = "수정")
                         }
                         Spacer(modifier = Modifier.size(10.dp))
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = {
+                            onDelete(todoData.key)
+                        }) {
                             Text(text = "삭제")
                         }
                     }
