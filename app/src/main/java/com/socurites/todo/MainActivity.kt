@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -57,6 +59,7 @@ fun TopLevel() {
     val onSubmit: (String) -> Unit = {(text)
         val key = (toDoList.lastOrNull()?.key ?: 0) + 1
         toDoList.add(ToDoData(key, text, false))
+        setText("")
     }
 
     Scaffold {
@@ -68,8 +71,17 @@ fun TopLevel() {
             ToDoInput(
                 text = text,
                 onTextChange = setText,
-                onSubmit = onSubmit)
+                onSubmit = onSubmit
+            )
+
+            LazyColumn() {
+                items(toDoList) {todoData ->
+                    ToDo(todoData)
+                }
+            }
         }
+
+
     }
 }
 
