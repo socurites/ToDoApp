@@ -1,6 +1,7 @@
 package com.socurites.todo
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
@@ -24,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,12 +56,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TopLevel() {
     val (text, setText) = remember { mutableStateOf("") }
-    val toDoList = remember { mutableListOf<ToDoData>() }
+    val toDoList = remember { mutableStateListOf<ToDoData>() }
 
     val onSubmit: (String) -> Unit = {(text)
         val key = (toDoList.lastOrNull()?.key ?: 0) + 1
         toDoList.add(ToDoData(key, text, false))
         setText("")
+    }
+
+    val onToggle: (Int, Boolean) -> Unit = { key, checked ->
+        Log.i("Main", "$checked")
+        val indexOfFirst = toDoList.indexOfFirst { it.key == key }
+        toDoList[indexOfFirst] = toDoList[indexOfFirst].copy(done = checked)
     }
 
     Scaffold {
@@ -76,7 +84,10 @@ fun TopLevel() {
 
             LazyColumn() {
                 items(toDoList) {todoData ->
-                    ToDo(todoData)
+                    ToDo(
+                        todoData = todoData,
+                        onToggle = onToggle,
+                    )
                 }
             }
         }
@@ -123,7 +134,8 @@ fun ToDo(
             when(it) {
                 false -> {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(8.dp),
                     ) {
                         Text(
                             text = todoData.text,
@@ -148,7 +160,8 @@ fun ToDo(
                 }
                 true -> {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(8.dp),
                     ) {
                         OutlinedTextField(
                             value = todoData.text,
