@@ -54,13 +54,21 @@ fun TopLevel() {
     val (text, setText) = remember { mutableStateOf("") }
     val toDoList = remember { mutableListOf<ToDoData>() }
 
+    val onSubmit: (String) -> Unit = {(text)
+        val key = (toDoList.lastOrNull()?.key ?: 0) + 1
+        toDoList.add(ToDoData(key, text, false))
+    }
+
     Scaffold {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
         ) {
-            ToDoInput(text = text, onTextChange = setText, onSubmit = {})
+            ToDoInput(
+                text = text,
+                onTextChange = setText,
+                onSubmit = onSubmit)
         }
     }
 }
