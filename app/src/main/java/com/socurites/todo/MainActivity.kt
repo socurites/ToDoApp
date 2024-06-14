@@ -74,6 +74,11 @@ fun TopLevel() {
         toDoList.removeAt(indexOfFirst)
     }
 
+    val onEdit: (Int, String) -> Unit = { key, text ->
+        val indexOfFirst = toDoList.indexOfFirst { it.key == key }
+        toDoList[indexOfFirst] = toDoList[indexOfFirst].copy(text = text)
+    }
+
     Scaffold {
         Column(
             modifier = Modifier
@@ -92,6 +97,7 @@ fun TopLevel() {
                         todoData = todoData,
                         onToggle = onToggle,
                         onDelete = onDelete,
+                        onEdit = onEdit,
                     )
                 }
             }
@@ -170,12 +176,16 @@ fun ToDo(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(8.dp),
                     ) {
+                        var (newText, setNewText) = remember { mutableStateOf(todoData.text) }
                         OutlinedTextField(
-                            value = todoData.text,
-                            onValueChange = {},
+                            value = newText,
+                            onValueChange = setNewText,
                             modifier = Modifier.weight(1f))
                         Spacer(modifier = Modifier.size(4.dp))
-                        Button(onClick = {}) {
+                        Button(onClick = {
+                            onEdit(todoData.key, newText)
+                            isEditing = false
+                        }) {
                             Text(text = "완료")
                         }
                     }
