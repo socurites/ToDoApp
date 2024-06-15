@@ -1,7 +1,6 @@
 package com.socurites.todo
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
@@ -25,7 +24,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,7 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socurites.todo.ui.theme.ToDoAppTheme
+import com.socurites.todo.vm.ToDoViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,31 +54,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopLevel() {
-    val (text, setText) = remember { mutableStateOf("") }
-    val toDoList = remember { mutableStateListOf<ToDoData>() }
-
-    val onSubmit: (String) -> Unit = {(text)
-        val key = (toDoList.lastOrNull()?.key ?: 0) + 1
-        toDoList.add(ToDoData(key, text, false))
-        setText("")
-    }
-
-    val onToggle: (Int, Boolean) -> Unit = { key, checked ->
-        val indexOfFirst = toDoList.indexOfFirst { it.key == key }
-        toDoList[indexOfFirst] = toDoList[indexOfFirst].copy(done = checked)
-    }
-
-    val onDelete: (Int) -> Unit = {key ->
-        val indexOfFirst = toDoList.indexOfFirst { it.key == key }
-        toDoList.removeAt(indexOfFirst)
-    }
-
-    val onEdit: (Int, String) -> Unit = { key, text ->
-        val indexOfFirst = toDoList.indexOfFirst { it.key == key }
-        toDoList[indexOfFirst] = toDoList[indexOfFirst].copy(text = text)
-    }
-
+fun TopLevel(viewModel: ToDoViewModel = viewModel()) {
     Scaffold {
         Column(
             modifier = Modifier
@@ -86,18 +62,20 @@ fun TopLevel() {
                 .padding(it)
         ) {
             ToDoInput(
-                text = text,
-                onTextChange = setText,
-                onSubmit = onSubmit
+                text = viewModel.text.value,
+                onTextChange = { text ->
+                               viewModel.text.value = text
+                },
+                onSubmit = viewModel.onSubmit
             )
 
-            LazyColumn() {
-                items(items = toDoList, key = { item ->  item.key }) {todoData ->
+            LazyColumn {
+                items(items = viewModel.toDoList, key = { item ->  item.key }) {todoData ->
                     ToDo(
                         todoData = todoData,
-                        onToggle = onToggle,
-                        onDelete = onDelete,
-                        onEdit = onEdit,
+                        onToggle = viewModel.onToggle,
+                        onDelete = viewModel.onDelete,
+                        onEdit = viewModel.onEdit,
                     )
                 }
             }
@@ -176,7 +154,7 @@ fun ToDo(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(8.dp),
                     ) {
-                        var (newText, setNewText) = remember { mutableStateOf(todoData.text) }
+                        val (newText, setNewText) = remember { mutableStateOf(todoData.text) }
                         OutlinedTextField(
                             value = newText,
                             onValueChange = setNewText,
