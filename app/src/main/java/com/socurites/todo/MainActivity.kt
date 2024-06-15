@@ -1,7 +1,6 @@
 package com.socurites.todo
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
@@ -33,6 +32,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socurites.todo.ui.theme.ToDoAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -52,16 +53,19 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+class ToDoViewModel: ViewModel() {
+    val text = mutableStateOf("")
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopLevel() {
-    val (text, setText) = remember { mutableStateOf("") }
+fun TopLevel(viewModel: ToDoViewModel = viewModel()) {
     val toDoList = remember { mutableStateListOf<ToDoData>() }
 
-    val onSubmit: (String) -> Unit = {(text)
+    val onSubmit: (String) -> Unit = {(it)
         val key = (toDoList.lastOrNull()?.key ?: 0) + 1
-        toDoList.add(ToDoData(key, text, false))
-        setText("")
+        toDoList.add(ToDoData(key, it, false))
+        viewModel.text.value = ""
     }
 
     val onToggle: (Int, Boolean) -> Unit = { key, checked ->
@@ -86,8 +90,10 @@ fun TopLevel() {
                 .padding(it)
         ) {
             ToDoInput(
-                text = text,
-                onTextChange = setText,
+                text = viewModel.text.value,
+                onTextChange = {
+                               viewModel.text.value = it
+                },
                 onSubmit = onSubmit
             )
 
