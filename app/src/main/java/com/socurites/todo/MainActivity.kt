@@ -33,6 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.socurites.todo.model.ToDoData
 import com.socurites.todo.ui.theme.ToDoAppTheme
 import com.socurites.todo.vm.ToDoViewModel
 
@@ -78,6 +83,7 @@ fun TopLevel(viewModel: ToDoViewModel = viewModel()) {
                     )
                 }
             }
+            ToDoNav()
         }
 
 
@@ -172,6 +178,51 @@ fun ToDo(
     }
 }
 
+@Composable
+fun ToDoNav(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+) {
+    NavHost(navController, "Home", modifier = modifier) {
+        composable("Home") {
+            Column {
+                Text(text = "Home")
+                Button(onClick = {
+                    navController.navigate("Home") {
+                        launchSingleTop = true
+                    }
+                }) {
+                    Text("Home으로 이동")
+                }
+                Button(onClick = {
+                    navController.navigate("Office")
+                }) {
+                    Text("Office로 이동")
+                }
+                Button(onClick = {
+                    navController.navigate("Argument/product-aaa")
+                }) {
+                    Text("Product로 이동")
+                }
+            }
+        }
+        composable("Office") {
+            Column {
+                Text(text = "Office")
+                Button(onClick = {
+                    navController.navigate("Home")
+                }) {
+                    Text("Home으로 이동")
+                }
+            }
+        }
+        composable("Argument/{productId}") { backStrackEntry ->
+            val productId = backStrackEntry.arguments?.getString("productId")
+            Text("productId: $productId")
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ToDoInputPreview() {
@@ -196,9 +247,3 @@ fun GreetingPreview() {
         TopLevel()
     }
 }
-
-data class ToDoData(
-    val key: Int,
-    val text: String,
-    val done: Boolean = false,
-)
