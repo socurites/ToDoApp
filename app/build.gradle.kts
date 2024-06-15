@@ -54,6 +54,8 @@ android {
 }
 
 val daggerVersion = "2.44"
+val gsonVersion = "2.10.1"
+val retrofitVersion = "2.9.0"
 
 dependencies {
 
@@ -73,6 +75,13 @@ dependencies {
     // dagger-hilt 의존성
     implementation("com.google.dagger:hilt-android:$daggerVersion")
     kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
+
+    // GSON
+    implementation("com.google.code.gson:gson:$gsonVersion")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
 
     testImplementation("junit:junit:4.13.2")
