@@ -24,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -62,10 +63,8 @@ fun TopLevel(viewModel: ToDoViewModel = viewModel()) {
                 .padding(it)
         ) {
             ToDoInput(
-                text = viewModel.text.value,
-                onTextChange = { text ->
-                               viewModel.text.value = text
-                },
+                text = viewModel.text.observeAsState("").value,
+                onTextChange = viewModel.setText,
                 onSubmit = viewModel.onSubmit
             )
 
