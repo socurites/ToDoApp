@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.socurites.todo.model.ToDoData
 import com.socurites.todo.ui.theme.ToDoAppTheme
 import com.socurites.todo.vm.ToDoViewModel
 
@@ -196,9 +197,3 @@ fun GreetingPreview() {
         TopLevel()
     }
 }
-
-data class ToDoData(
-    val key: Int,
-    val text: String,
-    val done: Boolean = false,
-)
