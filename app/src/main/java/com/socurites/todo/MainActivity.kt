@@ -55,17 +55,12 @@ class MainActivity : ComponentActivity() {
 
 class ToDoViewModel: ViewModel() {
     val text = mutableStateOf("")
-}
+    val toDoList = mutableStateListOf<ToDoData>()
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopLevel(viewModel: ToDoViewModel = viewModel()) {
-    val toDoList = remember { mutableStateListOf<ToDoData>() }
-
-    val onSubmit: (String) -> Unit = {(it)
+    val onSubmit: (String) -> Unit = {
         val key = (toDoList.lastOrNull()?.key ?: 0) + 1
         toDoList.add(ToDoData(key, it, false))
-        viewModel.text.value = ""
+        text.value = ""
     }
 
     val onToggle: (Int, Boolean) -> Unit = { key, checked ->
@@ -82,7 +77,11 @@ fun TopLevel(viewModel: ToDoViewModel = viewModel()) {
         val indexOfFirst = toDoList.indexOfFirst { it.key == key }
         toDoList[indexOfFirst] = toDoList[indexOfFirst].copy(text = text)
     }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopLevel(viewModel: ToDoViewModel = viewModel()) {
     Scaffold {
         Column(
             modifier = Modifier
@@ -91,19 +90,19 @@ fun TopLevel(viewModel: ToDoViewModel = viewModel()) {
         ) {
             ToDoInput(
                 text = viewModel.text.value,
-                onTextChange = {
-                               viewModel.text.value = it
+                onTextChange = { text ->
+                               viewModel.text.value = text
                 },
-                onSubmit = onSubmit
+                onSubmit = viewModel.onSubmit
             )
 
-            LazyColumn() {
-                items(items = toDoList, key = { item ->  item.key }) {todoData ->
+            LazyColumn {
+                items(items = viewModel.toDoList, key = { item ->  item.key }) {todoData ->
                     ToDo(
                         todoData = todoData,
-                        onToggle = onToggle,
-                        onDelete = onDelete,
-                        onEdit = onEdit,
+                        onToggle = viewModel.onToggle,
+                        onDelete = viewModel.onDelete,
+                        onEdit = viewModel.onEdit,
                     )
                 }
             }
@@ -182,7 +181,7 @@ fun ToDo(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(8.dp),
                     ) {
-                        var (newText, setNewText) = remember { mutableStateOf(todoData.text) }
+                        val (newText, setNewText) = remember { mutableStateOf(todoData.text) }
                         OutlinedTextField(
                             value = newText,
                             onValueChange = setNewText,
