@@ -5,8 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.socurites.todo.screen.TodoScreen
 import com.socurites.todo.ui.theme.ToDoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,6 +34,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    TopLevel()
+                    ToDoNav()
                 }
             }
         }
@@ -38,43 +43,46 @@ class MainActivity : ComponentActivity() {
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToDoNav(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
-    NavHost(navController, "Home", modifier = modifier) {
-        composable("Home") {
-            Column {
-                Text(text = "Home")
-                Button(onClick = {
-                    navController.navigate("Home") {
-                        launchSingleTop = true
+    NavHost(navController, "ToDo", modifier = modifier) {
+        composable("ToDo") {
+            Scaffold {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                ) {
+                    TodoScreen()
+
+                    Column {
+                        Text("ToDo")
+                        Button(onClick = {
+                            navController.navigate("Git")
+                        }) {
+                            Text("Git")
+                        }
                     }
-                }) {
-                    Text("Home으로 이동")
-                }
-                Button(onClick = {
-                    navController.navigate("Office")
-                }) {
-                    Text("Office로 이동")
-                }
-                Button(onClick = {
-                    navController.navigate("Argument/product-aaa")
-                }) {
-                    Text("Product로 이동")
                 }
             }
+
         }
-        composable("Office") {
+
+        composable("Git") {
             Column {
-                Text(text = "Office")
-                Button(onClick = {
-                    navController.navigate("Home")
-                }) {
-                    Text("Home으로 이동")
+                Column {
+                    Button(onClick = {
+                        navController.navigate("ToDo")
+                    }) {
+                        Text("ToDo")
+                    }
                 }
             }
+
         }
         composable("Argument/{productId}") { backStrackEntry ->
             val productId = backStrackEntry.arguments?.getString("productId")
