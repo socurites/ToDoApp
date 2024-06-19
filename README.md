@@ -4,7 +4,10 @@
 
 
 ## 주요 Components
+### Jetpack Compose
 * Scaffold
 * OutlinedTextField: 텍스트 입력
 * LazyColumn: 목록 표시
 * Crossfade: 입력 수정/완료 전환
+
+### Hilt

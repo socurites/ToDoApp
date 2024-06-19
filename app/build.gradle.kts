@@ -54,7 +54,7 @@ android {
 }
 
 val hiltVersion = "2.44"
-val hiltNavigationComposeVersion = "1.0.0-alpha03"
+val hiltNavigationComposeVersion = "1.0.0"
 val lifecycleVersion = "2.4.0"
 val gsonVersion = "2.10.1"
 val retrofitVersion = "2.9.0"
@@ -77,7 +77,8 @@ dependencies {
     // dagger-hilt 의존성
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
-//    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02")
+    implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
+
 
     // GSON
     implementation("com.google.code.gson:gson:$gsonVersion")
