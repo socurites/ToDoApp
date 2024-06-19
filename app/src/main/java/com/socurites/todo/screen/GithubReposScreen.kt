@@ -6,12 +6,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.socurites.todo.ui.theme.ToDoAppTheme
 import com.socurites.todo.vm.github.GithubViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun GithubReposScreen(viewModel: GithubViewModel = viewModel()) {
+fun GithubReposScreen(viewModel: GithubViewModel = hiltViewModel()) {
     LazyColumn {
         item {
             Button(onClick = {
