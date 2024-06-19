@@ -1,6 +1,6 @@
 package com.socurites.todo.model.github
 
-data class GitRepository(
+data class GitRepos(
     val id: Long,
     val name: String,
     val htmlUrl: String,

@@ -3,6 +3,7 @@ package com.socurites.todo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,10 +21,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.socurites.todo.screen.TodoScreen
 import com.socurites.todo.ui.theme.ToDoAppTheme
+import com.socurites.todo.vm.github.GithubViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+//    @Inject lateinit var vm: GithubViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -40,8 +45,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,6 +77,16 @@ fun ToDoNav(
 
         composable("Git") {
             Column {
+                Scaffold {
+                    Column (
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it)
+                    ) {
+//                        GithubReposScreen()
+                    }
+                }
+
                 Column {
                     Button(onClick = {
                         navController.navigate("ToDo")
