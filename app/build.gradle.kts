@@ -77,7 +77,8 @@ dependencies {
     // dagger-hilt 의존성
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
-//    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
 
     // GSON
     implementation("com.google.code.gson:gson:$gsonVersion")
