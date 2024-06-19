@@ -87,6 +87,10 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
+    // Paging
+    implementation("androidx.paging:paging-common-ktx:3.1.1")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha15")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
